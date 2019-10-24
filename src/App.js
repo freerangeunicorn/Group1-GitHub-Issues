@@ -1,9 +1,32 @@
 import React, { useState, useEffect } from 'react'
+import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css'
+import NavBar from './components/NavBar'
+import Board from './components/Board'
+import Footer from './components/Footer'
 
 function App () {
-  const clientId = process.env.CLIENT_ID
+  const clientId = 'a8e0965c1810612702aa'
+  const [currentUser, setCurrentUser] = useState(null)
   const [token, setToken] = useState(null)
+
+  const getCurrentUser = async token => {
+    const options = {
+      json: true,
+      method: 'GET',
+      headers: {
+        Authorization: `token ${token}`.split('&')[0]
+      }
+    }
+    const response = await fetch('https://api.github.com/user', options)
+    const currentUser = await response.json()
+
+    if (currentUser) {
+      console.log(currentUser)
+
+      setCurrentUser(currentUser)
+    }
+  }
 
   useEffect(() => {
     const existingToken = sessionStorage.getItem('token')
@@ -27,13 +50,20 @@ function App () {
 
     if (existingToken) {
       setToken(existingToken)
+      getCurrentUser(existingToken)
     }
     // eslint-disable-next-line
   }, []);
 
-  console.log(token)
+  console.log(`token ${token}`.split('&')[0])
 
-  return <div className='App'>Hwheheheh</div>
+  return (
+    <div className='App'>
+      <NavBar />
+      <Board />
+      <Footer />
+    </div>
+  )
 }
 
 export default App
