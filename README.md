@@ -12,6 +12,7 @@ The following **required** functionalities are completed (this is a sample):
 
 * [ ] The user can enter a repository in a search bar, click "search", and see the associated issues. The repository should be of the format owner/repo-name, e.g. facebook/react.
 * [ ] If the repository does not exist, the user should see a proper error message.
+* [x] The user should be able to see the following information for each issue:
      * Issue Title * Number of the issue
      * Owner of the Issue
      * Owner Avatar * How long ago the issue was created in a human-friendly format (e.g. 2 days ago)
