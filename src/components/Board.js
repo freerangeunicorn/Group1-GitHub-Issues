@@ -1,5 +1,6 @@
 import React from 'react'
 import { Image, Pagination, Row, Col, Nav, Card, Button } from 'react-bootstrap'
+import Moment from 'react-moment';
 
 const Board = props => {
   return (
@@ -48,7 +49,7 @@ const Board = props => {
                   </Card.Text>
                   <Button variant='primary'>Go somewhere</Button>
                 </Card.Body>
-                <Card.Footer className='text-muted'>{issue.created_at} </Card.Footer>
+                <Card.Footer className='text-muted'><Moment fromNow>{issue.created_at}</Moment> </Card.Footer>
               </Card>
             )
           })}
