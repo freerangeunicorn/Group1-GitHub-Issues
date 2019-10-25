@@ -84,7 +84,7 @@ function App() {
 
     if (!accessToken && !existingToken) {
       window.location.replace(
-        `https://api.github.com/search/repositories?q=Facebook/react`
+        `https://github.com/login/oauth/authorize?scope=user:email,repo&client_id=${clientId}`
       );
     }
 
