@@ -1,6 +1,7 @@
 import React from 'react'
 import { Image, Pagination, Row, Col, Nav, Card, Button } from 'react-bootstrap'
 import Moment from 'react-moment';
+import ReactMarkdown from 'react-markdown' 
 
 const Board = props => {
   return (
@@ -45,7 +46,7 @@ const Board = props => {
                     </span>{' '}
                   </Card.Title>
                   <Card.Text>
-                    {issue.body}
+                    <ReactMarkdown source={issue.body} />
                   </Card.Text>
                   <Button variant='primary'>Go somewhere</Button>
                 </Card.Body>
