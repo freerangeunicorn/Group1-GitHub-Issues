@@ -61,8 +61,10 @@ function App() {
     if (existingToken) {
       setToken(existingToken)
       getCurrentUser(existingToken)
+      
     }
     // eslint-disable-next-line
+    console.log("current user check",currentUser)
   }, []);
 
 

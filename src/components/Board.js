@@ -3,7 +3,7 @@ import { Image, Pagination, Row, Col, Nav, Card, Button } from 'react-bootstrap'
 
 const Board = props => {
   return (
-    <Pagination.Item>
+    <div>
       <Row>
         <Col>
           <Nav className='justify-content-end' activeKey='/home'>
@@ -26,9 +26,9 @@ const Board = props => {
       </Row>
       <Row>
         <Col>
-          {props.issues.map(issue => {
+          {props.issues && props.issues.map(issue => {
             return (
-              <Card className='text-center'>
+              <Card key={issue.id} className='text-center'>
                 <Card.Header><Image width={171}
                   height={180}
                   src={issue.user.avatar_url}
@@ -36,9 +36,9 @@ const Board = props => {
                 <Card.Body>
                   <Card.Title>
                     <span
-                      className='displayModal'
-                      href='#'
-                      onClick={console.log('modal should display on click')}
+                      // className='displayModal'
+                      // href='#'
+                      // onClick={console.log('modal should display on click')}
                     >
                       {issue.title}
                     </span>{' '}
@@ -86,7 +86,7 @@ const Board = props => {
         <Pagination.Next />
         <Pagination.Last />
       </Pagination>
-    </Pagination.Item>
+      </div>
   )
 }
 
