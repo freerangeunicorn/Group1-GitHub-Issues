@@ -6,6 +6,7 @@ import Board from "./components/Board";
 import Footer from "./components/Footer";
 import ErrorMessage from "./components/ErrorMessage";
 
+
 function App() {
   const clientId = "a8e0965c1810612702aa";
   const [currentUser, setCurrentUser] = useState(null);
