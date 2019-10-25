@@ -52,8 +52,6 @@ function App() {
     const response = await fetch(url);
     const data = await response.json();
     setIssues(data.items);
-
-    // console.log('data', data)
   };
 
   useEffect(() => {
