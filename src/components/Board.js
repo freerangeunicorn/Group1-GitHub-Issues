@@ -33,8 +33,10 @@ const Board = props => {
               <Card key={issue.id} className='text-center'>
                 <Card.Header><Image width={171}
                   height={180}
-                  src={issue.user.avatar_url}
-                  alt={issue.user.login} /> #{issue.number} {issue.user.login}</Card.Header>
+                  src={issue.owner && issue.owner.avatar_url}
+                  alt={issue.description} />
+                   {/* #{issue.description} {issue.description} */}
+                   </Card.Header>
                 <Card.Body>
                   <Card.Title>
                     <span
@@ -42,11 +44,11 @@ const Board = props => {
                       // href='#'
                       // onClick={console.log('modal should display on click')}
                     >
-                      {issue.title}
+                     <a href="#">{issue.full_name}</a> 
                     </span>{' '}
                   </Card.Title>
                   <Card.Text>
-                    <ReactMarkdown source={issue.body} />
+                    <ReactMarkdown source={issue.description} />
                   </Card.Text>
                   <Button variant='primary'>Go somewhere</Button>
                 </Card.Body>
