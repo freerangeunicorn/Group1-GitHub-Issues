@@ -48,10 +48,17 @@ function App() {
     setIssues(data.items);
   };
 
+  // const getSearchResults = async () => {
+  //   const url = `https://api.github.com/search/issues?q=${query}`;
+  //   const response = await fetch(url);
+  //   const data = await response.json();
+  //   setIssues(data.items);
+  // };
   const getSearchResults = async () => {
-    const url = `https://api.github.com/search/issues?q=${query}`;
+    const url = `https://api.github.com/search/repositories?q=${query}`;
     const response = await fetch(url);
     const data = await response.json();
+    console.log('data',data)
     setIssues(data.items);
   };
 
@@ -64,7 +71,7 @@ function App() {
 
     if (!accessToken && !existingToken) {
       window.location.replace(
-        `https://github.com/login/oauth/authorize?scope=user:email,repo&client_id=${clientId}`
+        `https://api.github.com/search/repositories?q=Facebook/react`
       );
     }
 
@@ -90,6 +97,11 @@ function App() {
   console.log("cUser", currentUser);
   console.log("Issues", issues);
   return (
+//     <ReactModal isOpen={true}>
+//       <button> Hide Modal </button>
+// </ReactModal>
+
+
     <div className="App">
       <NavBar handleSearch={handleSearch} setQuery={setQuery} query={query} />
       {issues.length > 0 ? <Board issues={issues} /> : <ErrorMessage />}
