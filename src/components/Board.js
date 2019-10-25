@@ -19,9 +19,8 @@ const Board = props => {
               <Nav.Link eventKey='link-2'>Filter or Sort</Nav.Link>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link eventKey='disabled' disabled>
-                Disabled
-              </Nav.Link>
+           
+              <Button onClick={props.toggle}>New Issue</Button>
             </Nav.Item>
           </Nav>
         </Col>
@@ -44,7 +43,7 @@ const Board = props => {
                       // href='#'
                       // onClick={console.log('modal should display on click')}
                     >
-                     <a href="#">{issue.full_name}</a> 
+                     <a href="#" onClick={props.toggle}>{issue.full_name}</a> 
                     </span>{' '}
                   </Card.Title>
                   <Card.Text>

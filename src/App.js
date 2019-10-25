@@ -5,7 +5,19 @@ import NavBar from "./components/NavBar";
 import Board from "./components/Board";
 import Footer from "./components/Footer";
 import ErrorMessage from "./components/ErrorMessage";
+import Modal from "react-modal";
+import {Form, Button} from 'react-bootstrap'
 
+const customStyles = {
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)"
+  }
+};
 
 function App() {
   const clientId = "a8e0965c1810612702aa";
@@ -13,6 +25,7 @@ function App() {
   const [token, setToken] = useState(null);
   const [issues, setIssues] = useState([]);
   const [query, setQuery] = useState("");
+  const [isShown, setIsShown] = useState(false);
 
   const handleSearch = e => {
     e.preventDefault();
@@ -39,7 +52,7 @@ function App() {
   // 1st async function to fetch api for keyword
   //
   const getIssues = async () => {
-    const url = `https://api.github.com/search/issues?q=author:${currentUser}`;
+    const url = `https://api.github.com/search/repositories?q=facebook/react`;
     console.log("ISSUEURL", url);
 
     const response = await fetch(url);
@@ -58,7 +71,7 @@ function App() {
     const url = `https://api.github.com/search/repositories?q=${query}`;
     const response = await fetch(url);
     const data = await response.json();
-    console.log('data',data)
+    console.log("data", data);
     setIssues(data.items);
   };
 
@@ -94,17 +107,61 @@ function App() {
     getIssues();
   }, [currentUser]);
 
-  console.log("cUser", currentUser);
-  console.log("Issues", issues);
+  function toggle(idx) {
+    setIsShown(!isShown);
+  }
+  // const ToggleContent = ({toggle, content}) =>{
+  //   const [isShown, setIsShown] = useState(false)
+  //   const hide = () => setIsShown(false)
+  //   const show = () => setIsShown(true)
+  //   return(
+  //     <>
+  //       {toggle(show)}
+  //       {
+  //         isShown && content(hide)
+  //       }
+  //     </>
+  //   )
+
+  // }
+
+  // const Modal =({children})=>{
+  //   ReactDOM.createPortal(
+  //     <div className="modal">{children}</div>,
+  //     document.getElementById('modal-root')
+  //   )
+  // }
+  console.log("skskk", isShown);
+
   return (
-//     <ReactModal isOpen={true}>
-//       <button> Hide Modal </button>
-// </ReactModal>
-
-
     <div className="App">
+      <Modal isOpen={isShown}  style={customStyles}>
+        {/* form  */}
+        <Form>
+          <Form.Group controlId="exampleForm.ControlInput1">
+            <Form.Label>Title</Form.Label>
+            <Form.Control type="text" placeholder="Issue Title" />
+          </Form.Group>
+          <Form.Group controlId="exampleForm.ControlTextarea1">
+            <Form.Label>Issue Comment</Form.Label>
+            <Form.Control as="textarea" rows="6" />
+          </Form.Group>
+          <Button variant="dark">
+            Submit A New Issue
+          </Button>
+          <Button variant="dark" onClick={toggle}>
+            Close
+          </Button>
+        </Form>
+        {/* end form  */}
+      </Modal>
+
       <NavBar handleSearch={handleSearch} setQuery={setQuery} query={query} />
-      {issues.length > 0 ? <Board issues={issues} /> : <ErrorMessage />}
+      {issues.length > 0 ? (
+        <Board issues={issues} toggle={toggle} />
+      ) : (
+        <ErrorMessage />
+      )}
       <Footer />
     </div>
   );
