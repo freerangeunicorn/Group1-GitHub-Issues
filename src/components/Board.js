@@ -29,7 +29,6 @@ const Board = props => {
         <Col>
 
             {props.repoIssues && props.repoIssues.map(issue => {
-          {/* {props.issues && props.issues.map(issue => { */}
             return (
               <Card key={issue.id} className='text-left'>
                 <Card.Header>
