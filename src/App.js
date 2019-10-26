@@ -24,8 +24,11 @@ function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [token, setToken] = useState(null);
   const [issues, setIssues] = useState([]);
+  const [repoIssues, setRepoIssues] = useState({});
   const [query, setQuery] = useState("");
   const [isShown, setIsShown] = useState(false);
+  const [repo, setRepo] = useState('Group1-GitHub-Issues')
+  const [owner, setOwner] = useState('freerangeunicorn') 
 
   const handleSearch = e => {
     e.preventDefault();
@@ -43,30 +46,58 @@ function App() {
     };
     const response = await fetch("https://api.github.com/user", options);
     const currentUser = await response.json();
-    console.log(response);
+    // console.log(response);
 
     if (currentUser) {
       setCurrentUser(currentUser.login);
     }
   };
   // 1st async function to fetch api for keyword
-  //
-  const getIssues = async () => {
+  // THIS SEARCHES ALL REPOSITORIES FOR A KEYWORD - original api call 
+  const getIssues = async () => {  
     const url = `https://api.github.com/search/repositories?q=facebook/react`;
-    console.log("ISSUEURL", url);
+    // console.log("ISSUEURL", url);
 
     const response = await fetch(url);
 
     const data = await response.json();
     setIssues(data.items);
   };
+  
 
-  // const getSearchResults = async () => {
+  // Our new API Call  
+
+  // const getRepoIssues = async () => {
+  //   const url =`https://api.github.com/repos/${owner}/${repo}/issues?`
+  //   const response = await fetch(url);
+  //   const data = await response.json();
+  //   setRepoIssues(data)
+  //   console.log("repo issues" , repoIssues)
+  // }
+
+  const getRepoIssues = async () => {
+    const url = `https://api.github.com/repos/${owner}/${repo}/issues?page=1&per_page=20&order=asc`;
+    const response = await fetch(url);
+
+    // get header link
+    // const link = await response.headers.get("link");  MAI CHANGE THE NAMES!! 
+
+    const data = await response.json();
+    setRepoIssues(data);
+   
+  };
+
+  console.log("did they pull through",repoIssues)
+
+  // const getSearchResults = async () => {  THIS API CALL SEARCHES ALL OF GITHUB 
   //   const url = `https://api.github.com/search/issues?q=${query}`;
   //   const response = await fetch(url);
   //   const data = await response.json();
   //   setIssues(data.items);
   // };
+
+
+  // This API call gets search results from all repositories - 
   const getSearchResults = async () => {
     const url = `https://api.github.com/search/repositories?q=${query}`;
     const response = await fetch(url);
@@ -100,12 +131,14 @@ function App() {
       getCurrentUser(existingToken);
     }
     // eslint-disable-next-line
-    console.log("current user check", currentUser);
+    // console.log("current user check", currentUser);
   }, []);
 
-  useEffect(() => {
-    getIssues();
-  }, [currentUser]);
+  useEffect(() => {    
+    getRepoIssues();
+  }, []);
+
+
 
   function toggle(idx) {
     setIsShown(!isShown);
@@ -131,7 +164,7 @@ function App() {
   //     document.getElementById('modal-root')
   //   )
   // }
-  console.log("skskk", isShown);
+  // console.log("skskk", isShown);
 
   return (
     <div className="App">
@@ -139,14 +172,14 @@ function App() {
         {/* form  */}
         <Form>
           <Form.Group controlId="exampleForm.ControlInput1">
-            <Form.Label>Title</Form.Label>
+            <Form.Label>Submit a new issue</Form.Label>
             <Form.Control type="text" placeholder="Issue Title" />
           </Form.Group>
           <Form.Group controlId="exampleForm.ControlTextarea1">
-            <Form.Label>Issue Comment</Form.Label>
+            <Form.Label>Comments</Form.Label>
             <Form.Control as="textarea" rows="6" />
           </Form.Group>
-          <Button variant="dark">
+          <Button variant="dark" onClick={console.log("test button")}>
             Submit A New Issue
           </Button>
           <Button variant="dark" onClick={toggle}>
@@ -156,9 +189,22 @@ function App() {
         {/* end form  */}
       </Modal>
 
-      <NavBar handleSearch={handleSearch} setQuery={setQuery} query={query} />
-      {issues.length > 0 ? (
-        <Board issues={issues} toggle={toggle} />
+      <NavBar 
+      handleSearch={handleSearch}
+      setQuery={setQuery} 
+      query={query}
+      owner={owner}
+      setOwner={setOwner}
+      repo={repo}
+      setRepo={setRepo}
+
+      />
+      {repoIssues.length > 0 ? (
+        <Board 
+        issues={issues} 
+        setRepoIssues = {setRepoIssues}
+        repoIssues ={repoIssues}
+        toggle={toggle} />
       ) : (
         <ErrorMessage />
       )}

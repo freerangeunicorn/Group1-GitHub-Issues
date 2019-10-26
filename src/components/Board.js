@@ -27,17 +27,25 @@ const Board = props => {
       </Row>
       <Row>
         <Col>
-          {props.issues && props.issues.map(issue => {
+
+            {props.repoIssues && props.repoIssues.map(issue => {
+          {/* {props.issues && props.issues.map(issue => { */}
             return (
-              <Card key={issue.id} className='text-center'>
-                <Card.Header><Image width={171}
-                  height={180}
-                  src={issue.owner && issue.owner.avatar_url}
-                  alt={issue.description} />
+              <Card key={issue.id} className='text-left'>
+                <Card.Header>
+                {issue.user.login} 
+                {issue.number}
+          
+                  {/* issuenumber here */}
                    {/* #{issue.description} {issue.description} */}
                    </Card.Header>
                 <Card.Body>
-                  <Card.Title>
+                  <Card.Title> 
+                    {issue.title}
+                  <Image width={30}
+                  height={30}
+                  src={issue.owner && issue.owner.avatar_url}
+                  alt={issue.description} />
                     <span
                       // className='displayModal'
                       // href='#'
@@ -47,7 +55,7 @@ const Board = props => {
                     </span>{' '}
                   </Card.Title>
                   <Card.Text>
-                    <ReactMarkdown source={issue.description} />
+                    <ReactMarkdown source={issue.body} />
                   </Card.Text>
                   <Button variant='primary'>Go somewhere</Button>
                 </Card.Body>
