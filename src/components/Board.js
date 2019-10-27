@@ -53,7 +53,7 @@ const Board = props => {
                     }}
                   >
                     <Card.Header>
-                      {issue.user.login}
+                      Name: {issue.user.login} / {issue.open_issues} Open issue
                       {issue.number}
 
                       {/* issuenumber here */}
