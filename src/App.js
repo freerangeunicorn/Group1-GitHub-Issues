@@ -106,6 +106,7 @@ function App() {
   //   const data = await response.json();
   //   setIssues(data.items);
   // };
+
   const getRepoInfo = async () => {
     const url = `https://api.github.com/repos/${owner}/${repo}/`;
     const response = await fetch(url);
@@ -116,7 +117,7 @@ function App() {
   console.log("repoInfo", repoInfo)
 
 
-  console.log("did they pull through search results , data, owner,repo", repoIssues, owner, repo)
+  console.log("did they pull through search results , data, owner,repo", repoInfo, repoIssues, owner, repo)
 
   useEffect(() => {
     const existingToken = sessionStorage.getItem("token");

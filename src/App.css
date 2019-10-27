@@ -1,4 +1,22 @@
-.container-fluid {
+.container {
   width: 60%;
   margin-top: 30px;
+}
+
+
+
+
+.error-message {
+  border: 1px, solid, grey;
+  margin: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 80vh;
+  
+}
+
+.error-content{
+  margin: 20px;
 }
