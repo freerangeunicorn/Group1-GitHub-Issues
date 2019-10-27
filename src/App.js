@@ -6,7 +6,7 @@ import Board from "./components/Board";
 import Footer from "./components/Footer";
 import ErrorMessage from "./components/ErrorMessage";
 import Modal from "react-modal";
-import {Form, Button} from 'react-bootstrap'
+import { Form, Button } from 'react-bootstrap'
 
 const customStyles = {
   content: {
@@ -24,17 +24,18 @@ function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [token, setToken] = useState(null);
   const [issues, setIssues] = useState([]);
-  const [repoIssues, setRepoIssues] = useState({});
-  const [query, setQuery] = useState("");
+  const [repoIssues, setRepoIssues] = useState([]);
+  const [repoInfo, setRepoInfo] = useState ({});
+  // const [query, setQuery] = useState("");
   const [isShown, setIsShown] = useState(false);
   const [repo, setRepo] = useState('Group1-GitHub-Issues')
-  const [owner, setOwner] = useState('freerangeunicorn') 
+  const [owner, setOwner] = useState('freerangeunicorn')
 
-  const handleSearch = e => {
-    e.preventDefault();
-    // console.log("Query", query);
-    getSearchResults();
-  };
+  // const handleSearch = e => {
+  //   e.preventDefault();
+  //   // console.log("Query", query);
+  //   getSearchResults();
+  // };
 
   const getCurrentUser = async token => {
     const options = {
@@ -54,7 +55,7 @@ function App() {
   };
   // 1st async function to fetch api for keyword
   // THIS SEARCHES ALL REPOSITORIES FOR A KEYWORD - original api call 
-  const getIssues = async () => {  
+  const getIssues = async () => {
     const url = `https://api.github.com/search/repositories?q=facebook/react`;
     // console.log("ISSUEURL", url);
 
@@ -63,7 +64,7 @@ function App() {
     const data = await response.json();
     setIssues(data.items);
   };
-  
+
 
   // Our new API Call  
 
@@ -84,27 +85,28 @@ function App() {
 
     const data = await response.json();
     setRepoIssues(data);
-   
+
   };
 
-  console.log("did they pull through",repoIssues)
-
+  console.log("repoIssues", repoIssues)
+  
   // const getSearchResults = async () => {  THIS API CALL SEARCHES ALL OF GITHUB 
   //   const url = `https://api.github.com/search/issues?q=${query}`;
   //   const response = await fetch(url);
   //   const data = await response.json();
   //   setIssues(data.items);
   // };
-
-
-  // This API call gets search results from all repositories - 
-  const getSearchResults = async () => {
-    const url = `https://api.github.com/search/repositories?q=${query}`;
+  const getRepoInfo = async () => {
+    const url = `https://api.github.com/repos/${owner}/${repo}/`;
     const response = await fetch(url);
     const data = await response.json();
     console.log("data", data);
-    setIssues(data.items);
+    setRepoInfo(data);
   };
+  console.log("repoInfo", repoInfo)
+
+
+  console.log("did they pull through search results , data, owner,repo", repoIssues, owner, repo)
 
   useEffect(() => {
     const existingToken = sessionStorage.getItem("token");
@@ -134,10 +136,13 @@ function App() {
     // console.log("current user check", currentUser);
   }, []);
 
-  useEffect(() => {    
+  useEffect(() => {
     getRepoIssues();
   }, []);
 
+  useEffect(() => {
+    getRepoInfo();
+  }, []);
 
 
   function toggle(idx) {
@@ -168,7 +173,7 @@ function App() {
 
   return (
     <div className="App">
-      <Modal isOpen={isShown}  style={customStyles}>
+      <Modal isOpen={isShown} style={customStyles}>
         {/* form  */}
         <Form>
           <Form.Group controlId="exampleForm.ControlInput1">
@@ -189,25 +194,28 @@ function App() {
         {/* end form  */}
       </Modal>
 
-      <NavBar 
-      handleSearch={handleSearch}
-      setQuery={setQuery} 
-      query={query}
-      owner={owner}
-      setOwner={setOwner}
-      repo={repo}
-      setRepo={setRepo}
+      <NavBar
+        // handleSearch={handleSearch}
+        // setQuery={setQuery} 
+        // query={query}
+        setOwner={setOwner}
+        setRepo={setRepo}
+        getRepoIssues={getRepoIssues}
+        getRepoInfo={getRepoInfo}
 
       />
       {repoIssues.length > 0 ? (
-        <Board 
-        issues={issues} 
-        setRepoIssues = {setRepoIssues}
-        repoIssues ={repoIssues}
-        toggle={toggle} />
+        <Board
+          issues={issues}
+          setRepoIssues={setRepoIssues}
+          repoIssues={repoIssues}
+          repoInfo={repoInfo}
+          owner={owner}
+          repo={repo}
+          toggle={toggle} />
       ) : (
-        <ErrorMessage />
-      )}
+          <ErrorMessage />
+        )}
       <Footer />
     </div>
   );
