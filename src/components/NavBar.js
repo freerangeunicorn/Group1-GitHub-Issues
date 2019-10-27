@@ -10,7 +10,7 @@ export default function NavBar(props) {
   }
   return (
     <Navbar bg="dark" variant="dark">
-      <Navbar.Brand href="#home">IssueHub</Navbar.Brand>
+      <Navbar.Brand href="#home">Navbar</Navbar.Brand>
       <Nav className="mr-auto">
         <Nav.Link href="#home">Created</Nav.Link>
         <Nav.Link href="#features">Assigned </Nav.Link>
