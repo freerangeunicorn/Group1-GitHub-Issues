@@ -6,7 +6,7 @@ import Board from "./components/Board";
 import Footer from "./components/Footer";
 import ErrorMessage from "./components/ErrorMessage";
 import Modal from "react-modal";
-import {Form, Button} from 'react-bootstrap'
+import { Form, Button } from 'react-bootstrap'
 
 const customStyles = {
   content: {
@@ -24,14 +24,18 @@ function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [token, setToken] = useState(null);
   const [issues, setIssues] = useState([]);
-  const [query, setQuery] = useState("");
+  const [repoIssues, setRepoIssues] = useState([]);
+  const [repoInfo, setRepoInfo] = useState ({});
+  // const [query, setQuery] = useState("");
   const [isShown, setIsShown] = useState(false);
+  const [repo, setRepo] = useState('Group1-GitHub-Issues')
+  const [owner, setOwner] = useState('freerangeunicorn')
 
-  const handleSearch = e => {
-    e.preventDefault();
-    // console.log("Query", query);
-    getSearchResults();
-  };
+  // const handleSearch = e => {
+  //   e.preventDefault();
+  //   // console.log("Query", query);
+  //   getSearchResults();
+  // };
 
   const getCurrentUser = async token => {
     const options = {
@@ -43,17 +47,17 @@ function App() {
     };
     const response = await fetch("https://api.github.com/user", options);
     const currentUser = await response.json();
-    console.log(response);
+    // console.log(response);
 
     if (currentUser) {
       setCurrentUser(currentUser.login);
     }
   };
   // 1st async function to fetch api for keyword
-  //
+  // THIS SEARCHES ALL REPOSITORIES FOR A KEYWORD - original api call 
   const getIssues = async () => {
     const url = `https://api.github.com/search/repositories?q=facebook/react`;
-    console.log("ISSUEURL", url);
+    // console.log("ISSUEURL", url);
 
     const response = await fetch(url);
 
@@ -61,19 +65,48 @@ function App() {
     setIssues(data.items);
   };
 
-  // const getSearchResults = async () => {
+
+  // Our new API Call  
+
+  // const getRepoIssues = async () => {
+  //   const url =`https://api.github.com/repos/${owner}/${repo}/issues?`
+  //   const response = await fetch(url);
+  //   const data = await response.json();
+  //   setRepoIssues(data)
+  //   console.log("repo issues" , repoIssues)
+  // }
+
+  const getRepoIssues = async () => {
+    const url = `https://api.github.com/repos/${owner}/${repo}/issues?page=1&per_page=20&order=asc`;
+    const response = await fetch(url);
+
+    // get header link
+    // const link = await response.headers.get("link");  MAI CHANGE THE NAMES!! 
+
+    const data = await response.json();
+    setRepoIssues(data);
+
+  };
+
+  console.log("repoIssues", repoIssues)
+  
+  // const getSearchResults = async () => {  THIS API CALL SEARCHES ALL OF GITHUB 
   //   const url = `https://api.github.com/search/issues?q=${query}`;
   //   const response = await fetch(url);
   //   const data = await response.json();
   //   setIssues(data.items);
   // };
-  const getSearchResults = async () => {
-    const url = `https://api.github.com/search/repositories?q=${query}`;
+  const getRepoInfo = async () => {
+    const url = `https://api.github.com/repos/${owner}/${repo}/`;
     const response = await fetch(url);
     const data = await response.json();
     console.log("data", data);
-    setIssues(data.items);
+    setRepoInfo(data);
   };
+  console.log("repoInfo", repoInfo)
+
+
+  console.log("did they pull through search results , data, owner,repo", repoIssues, owner, repo)
 
   useEffect(() => {
     const existingToken = sessionStorage.getItem("token");
@@ -84,7 +117,7 @@ function App() {
 
     if (!accessToken && !existingToken) {
       window.location.replace(
-        `https://api.github.com/search/repositories?q=Facebook/react`
+        `https://github.com/login/oauth/authorize?scope=user:email,repo&client_id=${clientId}`
       );
     }
 
@@ -100,12 +133,17 @@ function App() {
       getCurrentUser(existingToken);
     }
     // eslint-disable-next-line
-    console.log("current user check", currentUser);
+    // console.log("current user check", currentUser);
   }, []);
 
   useEffect(() => {
-    getIssues();
-  }, [currentUser]);
+    getRepoIssues();
+  }, []);
+
+  useEffect(() => {
+    getRepoInfo();
+  }, []);
+
 
   function toggle(idx) {
     setIsShown(!isShown);
@@ -131,22 +169,22 @@ function App() {
   //     document.getElementById('modal-root')
   //   )
   // }
-  console.log("skskk", isShown);
+  // console.log("skskk", isShown);
 
   return (
     <div className="App">
-      <Modal isOpen={isShown}  style={customStyles}>
+      <Modal isOpen={isShown} style={customStyles}>
         {/* form  */}
         <Form>
           <Form.Group controlId="exampleForm.ControlInput1">
-            <Form.Label>Title</Form.Label>
+            <Form.Label>Submit a new issue</Form.Label>
             <Form.Control type="text" placeholder="Issue Title" />
           </Form.Group>
           <Form.Group controlId="exampleForm.ControlTextarea1">
-            <Form.Label>Issue Comment</Form.Label>
+            <Form.Label>Comments</Form.Label>
             <Form.Control as="textarea" rows="6" />
           </Form.Group>
-          <Button variant="dark">
+          <Button variant="dark" onClick={console.log("test button")}>
             Submit A New Issue
           </Button>
           <Button variant="dark" onClick={toggle}>
@@ -156,12 +194,28 @@ function App() {
         {/* end form  */}
       </Modal>
 
-      <NavBar handleSearch={handleSearch} setQuery={setQuery} query={query} />
-      {issues.length > 0 ? (
-        <Board issues={issues} toggle={toggle} />
+      <NavBar
+        // handleSearch={handleSearch}
+        // setQuery={setQuery} 
+        // query={query}
+        setOwner={setOwner}
+        setRepo={setRepo}
+        getRepoIssues={getRepoIssues}
+        getRepoInfo={getRepoInfo}
+
+      />
+      {repoIssues.length > 0 ? (
+        <Board
+          issues={issues}
+          setRepoIssues={setRepoIssues}
+          repoIssues={repoIssues}
+          repoInfo={repoInfo}
+          owner={owner}
+          repo={repo}
+          toggle={toggle} />
       ) : (
-        <ErrorMessage />
-      )}
+          <ErrorMessage />
+        )}
       <Footer />
     </div>
   );
