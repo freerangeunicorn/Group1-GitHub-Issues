@@ -62,7 +62,7 @@ const Board = props => {
                     <Card.Body>
                       <Card.Title>
                         <Row>
-                          <Image
+                          <Image className="image"
                             width={50}
                             height={50}
                             src={issue.owner && issue.owner.avatar_url}
