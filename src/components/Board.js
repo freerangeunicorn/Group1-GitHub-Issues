@@ -38,9 +38,7 @@ const Board = props => {
         <Col>
           {props.repoIssues &&
             props.repoIssues.map(issue => {
-              {
-                /* {props.issues && props.issues.map(issue => { */
-              }
+            
               return (
                 <Container className="container-fluid">
                   <Card
@@ -84,12 +82,15 @@ const Board = props => {
                       <Card.Text>
                         <ReactMarkdown source={issue.body} />
                       </Card.Text>
-                      <div>
-                        <Badge variant="success">Success</Badge>
-                        <Badge variant="danger">Danger</Badge>
-                        <Badge variant="warning">Warning</Badge>
-                        <Badge variant="info">Info</Badge>
-                      </div>
+                      
+                      {props.labelList &&
+            props.labelList.map(label => {
+              return (
+                <div>
+                   <Badge className="badge">{label.name}</Badge>
+                   </div>
+              );
+            })}
                     </Card.Body>
                     <Card.Footer className="text-muted">
                       <Moment fromNow>{issue.created_at}</Moment>{" "}

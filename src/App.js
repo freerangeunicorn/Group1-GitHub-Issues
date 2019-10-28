@@ -6,7 +6,7 @@ import Board from "./components/Board";
 import Footer from "./components/Footer";
 import ErrorMessage from "./components/ErrorMessage";
 import Modal from "react-modal";
-import { Form, Button } from 'react-bootstrap'
+import { Form, Button } from 'react-bootstrap';
 
 const customStyles = {
   content: {
@@ -28,8 +28,10 @@ function App() {
   const [repoInfo, setRepoInfo] = useState ({});
   // const [query, setQuery] = useState("");
   const [isShown, setIsShown] = useState(false);
-  const [repo, setRepo] = useState('Group1-GitHub-Issues')
-  const [owner, setOwner] = useState('freerangeunicorn')
+  const [repo, setRepo] = useState('Group1-GitHub-Issues');
+  const [owner, setOwner] = useState('freerangeunicorn');
+  const [titleLink, setTitleLink]= useState([]);
+  const [labelList, setLabelList] = useState([]);
 
   // const handleSearch = e => {
   //   e.preventDefault();
@@ -65,6 +67,14 @@ function App() {
     setIssues(data.items);
   };
 
+  const getLabel = async () => {
+    const url = `https://api.github.com/repos/${owner}/${repo}/labels`;
+    const response = await fetch(url);
+    const labelList = await response.json();
+    setLabelList(labelList);
+  };
+console.log('label', labelList);
+
 
   // Our new API Call  
 
@@ -81,7 +91,7 @@ function App() {
     const response = await fetch(url);
 
     // get header link
-    // const link = await response.headers.get("link");  MAI CHANGE THE NAMES!! 
+    const titleLink = await response.headers.get("link");
 
     const data = await response.json();
     setRepoIssues(data);
@@ -145,6 +155,10 @@ function App() {
     getRepoInfo();
   }, []);
 
+
+  useEffect(() => {
+    getLabel();
+  }, []);
 
   function toggle(idx) {
     setIsShown(!isShown);
@@ -213,11 +227,12 @@ function App() {
           repoInfo={repoInfo}
           owner={owner}
           repo={repo}
-          toggle={toggle} />
+          toggle={toggle}
+          labelList={labelList} />
       ) : (
           <ErrorMessage />
         )}
-      <Footer />
+              <Footer />
     </div>
   );
 }
