@@ -53,8 +53,14 @@ const Board = props => {
                     }}
                   >
                     <Card.Header>
-                      Name: {issue.user.login} / {issue.open_issues} Open issue
-                      {issue.number}
+                    <Image
+                            width={30}
+                            height={30}
+                            src={issue.user && issue.user.avatar_url}
+                            alt={issue.description}
+                          />
+                      {issue.user.login} / {issue.open_issues} Open
+                     # {issue.number}
 
                       {/* issuenumber here */}
                       {/* #{issue.description} {issue.description} */}
@@ -62,12 +68,7 @@ const Board = props => {
                     <Card.Body>
                       <Card.Title>
                         <Row>
-                          <Image
-                            width={50}
-                            height={50}
-                            src={issue.owner && issue.owner.avatar_url}
-                            alt={issue.description}
-                          />
+                         
                         </Row>
                         {issue.title}
                         <span
