@@ -73,7 +73,7 @@ function App() {
     const labelList = await response.json();
     setLabelList(labelList);
   };
-
+console.log('label', labelList);
 
 
   // Our new API Call  
@@ -156,6 +156,10 @@ function App() {
   }, []);
 
 
+  useEffect(() => {
+    getLabel();
+  }, []);
+
   function toggle(idx) {
     setIsShown(!isShown);
   }
@@ -223,7 +227,8 @@ function App() {
           repoInfo={repoInfo}
           owner={owner}
           repo={repo}
-          toggle={toggle} />
+          toggle={toggle}
+          labelList={labelList} />
       ) : (
           <ErrorMessage />
         )}
